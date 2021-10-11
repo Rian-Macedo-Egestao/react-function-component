@@ -8,7 +8,7 @@ function App() {
   return (
     <div>
       <Container maxWidth="sm">
-        <Typography color="secondary" variant="h3" align="center">Formulário de cadastro</Typography>
+        <Typography color="" variant="h3" align="center">Formulário de cadastro</Typography>
         <FormularioCadastro/>
       </Container>
     </div>
