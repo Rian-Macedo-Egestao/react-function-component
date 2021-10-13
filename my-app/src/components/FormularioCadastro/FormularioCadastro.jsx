@@ -1,76 +1,54 @@
-import React, {useState} from "react";
-import { TextField } from "@mui/material/"
-import {Button} from "@mui/material/"
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Switch from "@mui/material/Switch";
+import React, { useEffect, useState } from "react";
+import DadosEntrega from "./DadosEntrega";
+import DadosPessoais from "./DadosPessoais";
+import DadosUsuario from "./DadosUsuario"
+import { Stepper , StepLabel, Step, Typography } from "@mui/material";
 
-function FormularioCadastro({enviar, validar}){
-    const [nome, setNome] = useState("")
-    const [sobrenome, setSobrenome] = useState("")
-    const [cpf, setCpf] = useState("")
-    const [promocoes, setPromocoes] = useState(true)
-    const [noticias, setNoticias] = useState(true)
-    const [error, setError] = useState({cpf:{valido:true, texto:""}})
+function FormularioCadastro({enviar, validacoes}){
+    const [estadoAtual, setEstadoAtual] = useState(0)
+    const [dadosColetados, setDados] = useState("");
+    const formularios = [
+        <DadosUsuario enviar={coletarDados} validacoes={validacoes}/>,
+        <DadosPessoais enviar={coletarDados} validacoes={validacoes}/>,
+        <DadosEntrega enviar={coletarDados} validacoes={validacoes}/>,
+        <Typography  variant="h4"  align="center">Cadastro Finalizado!</Typography>,
+    ];
+    
+    function coletarDados(dados){
+        setDados({...dadosColetados, ...dados});
+        proximaEtapa()
+    }
+
+    function proximaEtapa(){
+        setEstadoAtual(estadoAtual+1)
+    }
+
+    useEffect(()=>{
+        if(formularios.length-1 === estadoAtual){
+            enviar(dadosColetados)
+        }
+    })
+
     
     return (
-        <form
-        onSubmit={(event)=> {
-            event.preventDefault();
-            enviar({nome, sobrenome, cpf, promocoes, noticias});
-        }}
-        >
-            <TextField id="nome" 
-                value={nome}
-                onChange={(event)=>{
-                    setNome(event.target.value);
-                    }}
-               
-                label="nome" variant="outlined" fullWidth margin="normal"/>
-            <TextField id="sobrenome"
-                value={sobrenome}
-                onChange={(event)=>{
-                        setSobrenome(event.target.value);
-                    }} 
-                label="sobrenome" variant="outlined" fullWidth margin="normal"/>
-
-            <TextField id="cpf" 
-                value={cpf}
-                onChange={(event)=>{
-                    setCpf(event.target.value);
-                    }}
-                onFocus={(event) => 
-                    setError({cpf:{valido:true, texto:""}})
-                }
-                onBlur={(event) => {
-                    const valido = validar(event.target.value);
-                    setError({cpf:valido});
-                }  
-                }
-                error={!error.cpf.valido}
-                helperText={error.cpf.texto}
-                label="cpf" 
-                variant="outlined" 
-                fullWidth 
-                margin="normal"/>
-
-            <FormControlLabel control={<Switch
-            checked={promocoes} 
-            onChange={(event)=> {
-                setPromocoes(event.target.checked);
-            }}
-            color="success"  name="mailBox" />}label="Receber por email"/>
-
-            <FormControlLabel control={<Switch 
-            checked={noticias} 
-            onChange={(event)=> {
-                setNoticias(event.target.checked);
-               
-            }}
-            color="success"  name="novidadesBox" />}label="Receber novidades"/>
-
-            <Button type="submit" color="success" variant="contained" size="medium">Medium</Button>
-
-        </form> 
+        <div>
+            <Stepper activeStep={estadoAtual}>
+                <Step >
+                <StepLabel>Email</StepLabel>
+                </Step>
+                <Step >
+                <StepLabel>Dados Pessoais</StepLabel>
+                </Step>
+                <Step >
+                <StepLabel>Localização</StepLabel>
+                </Step>
+                <Step >
+                <StepLabel>Finalização</StepLabel>
+                </Step>
+            </Stepper>
+            {formularios[estadoAtual]}
+        </div>
+        
     );
     
 }
