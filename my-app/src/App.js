@@ -5,6 +5,7 @@ import {Container} from '@mui/material';
 import Typography from '@mui/material/Typography';
 import "@fontsource/roboto"
 import {validarCpf, validarSenha} from './model/cadastro'
+import ValidacoesCadastro from './context/ValidacoesCadastro';
 
 class App extends Component{
   render(){
@@ -12,7 +13,9 @@ class App extends Component{
       <div>
         <Container maxWidth="sm">
           <Typography color="" variant="h3" align="center">Formulário de cadastro</Typography>
-          <FormularioCadastro enviar={onSubmit} validacoes={{cpf:validarCpf, senha:validarSenha}}/>
+          <ValidacoesCadastro.Provider value={{cpf:validarCpf, senha:validarSenha}}>
+            <FormularioCadastro enviar={onSubmit}/>
+          </ValidacoesCadastro.Provider>
         </Container>
       </div>
     );
