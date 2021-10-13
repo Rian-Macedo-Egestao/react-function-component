@@ -32,8 +32,8 @@ function FormularioCadastro({enviar, validacoes}){
     
     return (
         <div>
-            <Stepper activeStep={estadoAtual}>
-                <Step >
+            <Stepper color="success" activeStep={estadoAtual}>
+                <Step color="success">
                 <StepLabel>Email</StepLabel>
                 </Step>
                 <Step >

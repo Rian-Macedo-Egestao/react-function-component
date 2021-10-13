@@ -18,12 +18,22 @@ function DadosPessoais({enviar, validacoes}){
         novoEstado[name] = validacoes[name](value);
         setError(novoEstado);
     }
+    function verificarValidacao(){
+        for(let campo in error){
+            if(!error[campo].valido){
+                return false
+            }
+        }
+        return true
+    }
     
     return (
         <form
         onSubmit={(event)=> {
             event.preventDefault();
-            enviar({nome, sobrenome, cpf, promocoes, noticias});
+            if(verificarValidacao()){
+                enviar({nome, sobrenome, cpf, promocoes, noticias});
+            }
         }}
         >
             <TextField id="nome" 
@@ -76,7 +86,9 @@ function DadosPessoais({enviar, validacoes}){
             onChange={(event)=> {
                 setPromocoes(event.target.checked);
             }}
-            color="success"  name="mailBox" />}label="Receber por email"/>
+            color="success"  
+            name="mailBox" />}
+            label="Receber por email"/>
 
             <FormControlLabel control={<Switch 
             checked={noticias} 
@@ -84,7 +96,9 @@ function DadosPessoais({enviar, validacoes}){
                 setNoticias(event.target.checked);
                
             }}
-            color="success"  name="novidadesBox" />}label="Receber novidades"/>
+            color="success"  
+            name="novidadesBox"/>}
+            label="Receber novidades"/>
 
             <Button type="submit" color="success" variant="contained" size="medium">Medium</Button>
 
