@@ -4,6 +4,7 @@ import {Button} from "@mui/material/"
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import ValidacoesCadastro from "../../context/ValidacoesCadastro";
+import useErros from "../../hooks/useErros";
 
 function DadosPessoais({enviar}){
     const [nome, setNome] = useState("");
@@ -11,24 +12,9 @@ function DadosPessoais({enviar}){
     const [cpf, setCpf] = useState("");
     const [promocoes, setPromocoes] = useState(true);
     const [noticias, setNoticias] = useState(true);
-    const [error, setError] = useState({cpf:{valido:true, texto:""}});
-
     const validacoes = useContext(ValidacoesCadastro)
-    function validarCampos(event){
-        const {name, value} = event.target;
-        const novoEstado = {...error}
-        novoEstado[name] = validacoes[name](value);
-        setError(novoEstado);
-    }
-    function verificarValidacao(){
-        for(let campo in error){
-            if(!error[campo].valido){
-                return false
-            }
-        }
-        return true
-    }
-    
+
+    const [error, validarCampos, verificarValidacao] = useErros(validacoes);
     return (
         <form
         onSubmit={(event)=> {
@@ -68,9 +54,6 @@ function DadosPessoais({enviar}){
                 onChange={(event)=>{
                     setCpf(event.target.value);
                     }}
-                onFocus={(event) => 
-                    setError({cpf:{valido:true, texto:""}})
-                }
                 onBlur={
                     validarCampos
                 }
